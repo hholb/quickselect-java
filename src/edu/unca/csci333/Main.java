@@ -102,7 +102,7 @@ public class Main {
 
     System.out.println("Selecting order statistic " + orderStat + " from array:");
     System.out.println(Arrays.toString(arr));
-    Quickselect<Integer> qs = new Quickselect<Integer>(arr);
+    Quickselect<Integer> qs = new Quickselect<>(arr);
     Integer result = qs.randomizedQuickSelect(orderStat);
     System.out.println("Result: " + result);
 
