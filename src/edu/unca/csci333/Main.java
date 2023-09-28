@@ -7,8 +7,19 @@ package edu.unca.csci333;
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * Runs through some tests of Counting Sort and Quickselect
+ * @author Hayden Holbrook <hholbroo@unca.edu>
+ */
 public class Main {
 
+  /**
+   * Sorts the given input using counting sort
+   *
+   * @param input array to be sorted
+   * @param output sorted array
+   * @param largestValueInInput largest value in input array
+   */
   private static void countingSort(int[] input, int[] output, int largestValueInInput) {
     int[] counters = new int[largestValueInInput + 1];
       for (int j : input) {
@@ -23,6 +34,12 @@ public class Main {
     }
   }
 
+  /**
+   * Sorts the given array using Counting Sort
+   *
+   * @param input array to be sorted
+   * @return sorted array
+   */
   public static int[] countingSort(int[] input) {
     int largestValue = findLargestValue(input);
     int[] output = new int[input.length];
@@ -30,6 +47,12 @@ public class Main {
     return output;
   }
 
+  /**
+   * Finds the largest value in the given array
+   *
+   * @param input array to be searched
+   * @return int largest value in given array
+   */
   private static int findLargestValue(int[] input) {
     int lagestSoFar = Integer.MIN_VALUE;
       for (int j : input) {
