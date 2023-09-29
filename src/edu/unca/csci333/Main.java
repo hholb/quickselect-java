@@ -9,108 +9,116 @@ import java.util.Random;
 
 /**
  * Runs through some tests of Counting Sort and Quickselect
+ *
  * @author Hayden Holbrook <hholbroo@unca.edu>
  */
 public class Main {
+    public static final int NUM_TESTS = 5;
+    public static final int ARRAY_MAX_LENGTH = 50;
+    public static final String[] ALPHABET = {
+            "A", "B", "C", "D", "E",
+            "F", "G", "H", "I", "J",
+            "K", "L", "M", "N", "O",
+            "P", "Q", "R", "S", "T",
+            "U", "V", "W", "X", "Y", "Z"
+        };
 
-  /**
-   * Sorts the given input using counting sort
-   *
-   * @param input array to be sorted
-   * @param output sorted array
-   * @param largestValueInInput largest value in input array
-   */
-  private static void countingSort(int[] input, int[] output, int largestValueInInput) {
-    int[] counters = new int[largestValueInInput + 1];
-      for (int j : input) {
-          counters[j]++;
-      }
-    for (int i = 1; i <= largestValueInInput; i++) {
-      counters[i] = counters[i] + counters[i - 1];
+    /**
+     * Sorts the given array using Counting Sort
+     *
+     * @param input array to be sorted
+     * @return sorted array
+     */
+    public static int[] countingSort(int[] input) {
+        if (input.length == 0) {
+            return new int[0];
+        }
+
+        int largestValue = findLargestValue(input);
+        int[] output = new int[input.length];
+        countingSort(input, output, largestValue);
+        return output;
     }
-    for (int i = input.length - 1; i >= 0; i--) {
-      counters[input[i]]--;
-      output[counters[input[i]]] = input[i];
+
+    /**
+     * Sorts the given input array using counting sort
+     *
+     * @param input               array to be sorted
+     * @param output              sorted array
+     * @param largestValueInInput largest value in input array
+     */
+    private static void countingSort(int[] input, int[] output, int largestValueInInput) {
+        int[] counters = new int[largestValueInInput + 1];
+        for (int j : input) { // count up the values
+            counters[j]++;
+        }
+        for (int i = 1; i <= largestValueInInput; i++) { // determine correct positions
+            counters[i] = counters[i] + counters[i - 1];
+        }
+        for (int i = input.length - 1; i >= 0; i--) { // fill output array
+            counters[input[i]]--;
+            output[counters[input[i]]] = input[i];
+        }
     }
-  }
 
-  /**
-   * Sorts the given array using Counting Sort
-   *
-   * @param input array to be sorted
-   * @return sorted array
-   */
-  public static int[] countingSort(int[] input) {
-    int largestValue = findLargestValue(input);
-    int[] output = new int[input.length];
-    countingSort(input, output, largestValue);
-    return output;
-  }
-
-  /**
-   * Finds the largest value in the given array
-   *
-   * @param input array to be searched
-   * @return int largest value in given array
-   */
-  private static int findLargestValue(int[] input) {
-    int lagestSoFar = Integer.MIN_VALUE;
-      for (int j : input) {
-          if (j > lagestSoFar)
-              lagestSoFar = j;
-      }
-    return lagestSoFar;
-  }
-
-  /**
-   * Randomly arranges the elements of the given array.
-   *
-   * @param array The array to mix up.
-   */
-  private static <T> void scrambleArray(T[] array) {
-    Random rand = new Random();
-    for (int i = 0; i < array.length; i++) {
-      int randomIndexToSwap = rand.nextInt(array.length);
-      T temp = array[randomIndexToSwap];
-      array[randomIndexToSwap] = array[i];
-      array[i] = temp;
+    /**
+     * Finds the largest value in the given array
+     *
+     * @param input array to be searched
+     * @return int largest value in given array
+     */
+    private static int findLargestValue(int[] input) {
+        int lagestSoFar = Integer.MIN_VALUE;
+        for (int j : input) {
+            if (j > lagestSoFar)
+                lagestSoFar = j;
+        }
+        return lagestSoFar;
     }
-  }
 
-  /**
-   * Randomly arranges the elements of the given array.
-   *
-   * @param array The array to mix up.
-   */
-  private static void scrambleArray(int[] array) {
-    Random rand = new Random();
-    for (int i = 0; i < array.length; i++) {
-      int randomIndexToSwap = rand.nextInt(array.length);
-      int temp = array[randomIndexToSwap];
-      array[randomIndexToSwap] = array[i];
-      array[i] = temp;
+    /**
+     * Creates some arrays and runs through some tests of Quickselect and Counting Sort
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        Random rand = new Random();
+        int orderStatistic;
+
+        for (int i = 1; i <= NUM_TESTS; i++) {
+            System.out.printf("==================== TEST %d ====================\n\n", i);
+            Integer[] integers = new Integer[rand.nextInt(ARRAY_MAX_LENGTH) + 1];
+            for (int j = 0; j < integers.length; j++) {
+                integers[j] = rand.nextInt(100);
+            }
+
+            String[] strings = new String[rand.nextInt(ARRAY_MAX_LENGTH) + 1];
+            for (int k = 0; k < strings.length; k++) {
+                strings[k] = ALPHABET[rand.nextInt(ALPHABET.length)];
+            }
+
+            int[] ints = new int[rand.nextInt(ARRAY_MAX_LENGTH) + 1];
+            for (int l = 0; l < ints.length; l++) {
+                ints[l] = rand.nextInt(100);
+            }
+
+            System.out.printf("=============== Quickselect %d ===============\n\n", i);
+            orderStatistic = rand.nextInt(strings.length - 1);
+            Quickselect<String> strQs = new Quickselect<>(strings);
+            System.out.printf("String Array: \n\t%s\n",Arrays.toString(strings));
+            System.out.printf("Order statistic: %d\n", orderStatistic);
+            System.out.printf("Quickselect returned: %s\n\n", strQs.randomizedQuickSelect(orderStatistic));
+
+            orderStatistic = rand.nextInt(integers.length - 1);
+            Quickselect<Integer> intQs = new Quickselect<>(integers);
+            System.out.printf("Integer Array:\n\t%s\n",Arrays.toString(integers));
+            System.out.printf("Order statistic: %d\n", orderStatistic);
+            System.out.printf("Quickselect returned: %d\n\n", intQs.randomizedQuickSelect(orderStatistic));
+
+
+            System.out.printf("=============== Counting Sort %d ===============\n\n", i);
+            System.out.printf("Int Array: \n\t%s\n",Arrays.toString(ints));
+            System.out.printf("Sorted: \n\t%s\n", Arrays.toString(countingSort(ints)));
+        }
     }
-  }
-
-  public static void main(String[] args) {
-    Integer[] arr = {1, 2, 3, 4, 5};
-    scrambleArray(arr);
-    int orderStat = 3;
-
-    int[] intArr = {1, 2, 3, 4, 5};
-    scrambleArray(intArr);
-
-    System.out.println("Selecting order statistic " + orderStat + " from array:");
-    System.out.println(Arrays.toString(arr));
-    Quickselect<Integer> qs = new Quickselect<>(arr);
-    Integer result = qs.randomizedQuickSelect(orderStat);
-    System.out.println("Result: " + result);
-
-    System.out.println();
-    System.out.println("Sorting...");
-    scrambleArray(arr);
-    System.out.println("Before: " + Arrays.toString(arr));
-    int[] sorted = countingSort(intArr);
-    System.out.println("After: " + Arrays.toString(sorted));
-  }
 }
